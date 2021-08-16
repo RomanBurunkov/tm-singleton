@@ -1,0 +1,58 @@
+{
+  "name": "tm-singleton",
+  "version": "0.0.1",
+  "description": "Implementation of singleton pattern for node.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore .",
+    "lint:tests": "eslint --fix --ignore-path .gitignore test/**",
+    "lint:fix": "eslint --fix --ignore-path .gitignore .",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RomanBurunkov/tm-singleton.git"
+  },
+  "keywords": [
+    "singleton"
+  ],
+  "author": "Roman Burunkov <romon2002@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RomanBurunkov/tm-singleton/issues"
+  },
+  "homepage": "https://github.com/RomanBurunkov/tm-singleton#readme",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.0",
+    "jest": "^27.0.6"
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "jest": true
+    },
+    "parserOptions": {
+      "ecmaFeatures": {
+        "legacyDecorators": true
+      }
+    },
+    "extends": [
+      "airbnb-base"
+    ],
+    "rules": {
+      "import/prefer-default-export": "off"
+    }
+  },
+  "jest": {
+    "verbose": true,
+    "moduleFileExtensions": [
+      "js",
+      "json"
+    ],
+    "testRegex": ".spec.js$",
+    "coverageDirectory": "./coverage"
+  }
+}
