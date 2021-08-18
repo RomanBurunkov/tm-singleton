@@ -1,14 +1,18 @@
 # tm-singleton
 
+[![npm](https://img.shields.io/npm/v/tm-singleton.svg)](https://www.npmjs.org/package/tm-singleton)
+
+[![codecov](https://codecov.io/gh/RomanBurunkov/tm-singleton/branch/main/graph/badge.svg?token=Z6DEN34H73)](https://codecov.io/gh/RomanBurunkov/tm-singleton)
+
 Implements a Singleton design pattern with several extra control methods.
 
-## Installation
+### Installation
 
 ```bash
 npm i tm-singleton
 ```
 
-## Tests
+### Tests
 
 ```bash
 npm test
@@ -20,7 +24,7 @@ Tests with coverage
 npm run test:coverage
 ```
 
-## Example
+### Example
 
 Create a module with a class which you want to make a singleton by wrapping it into a tm-singleton object:
 
