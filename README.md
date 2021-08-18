@@ -8,6 +8,18 @@ Implements a Singleton design pattern with several extra control methods.
 npm i tm-singleton
 ```
 
+## Tests
+
+```bash
+npm test
+```
+
+Tests with coverage
+
+```bash
+npm run test:coverage
+```
+
 ## Example
 
 Create a module with a class which you want to make a singleton by wrapping it into a tm-singleton object:
@@ -18,7 +30,7 @@ const singleton = require('tm-singleton');
 
 // Below is an example of the counter class
 // Which we are going to make a singleton.
-class mySuperCounter {
+class MySuperCounter {
   constructor(start = 0) {
     this.value = start;
   }
@@ -30,7 +42,7 @@ class mySuperCounter {
 }
 
 // Wrapping it into a singleton object.
-module.exports = singletone(mySuperCounter);
+module.exports = singletone(MySuperCounter);
 ```
 
 Require it somewhere in the code and create an instance.
@@ -42,7 +54,6 @@ const MySuperCounter = require('./mySuperCounter');
 const counter = new MySuperCounter(5);
 
 console.log(counter.increase(5)); // Will show 10;
-
 ```
 
 Require it another part of the code and create an instance.
@@ -54,5 +65,4 @@ const MySuperCounter = require('./mySuperCounter');
 const counter = new MySuperCounter(); // or const counter = MySuperCounter.INSTANCE;
 
 console.log(counter.increase(5)); // Will show 15, since it is the same instance of your counter;
-
 ```
