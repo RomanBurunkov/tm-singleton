@@ -1,7 +1,6 @@
 # tm-singleton
 
 [![npm](https://img.shields.io/npm/v/tm-singleton.svg)](https://www.npmjs.org/package/tm-singleton)
-
 [![codecov](https://codecov.io/gh/RomanBurunkov/tm-singleton/branch/main/graph/badge.svg?token=Z6DEN34H73)](https://codecov.io/gh/RomanBurunkov/tm-singleton)
 
 Implements a Singleton design pattern with several extra control methods.
@@ -22,6 +21,47 @@ Tests with coverage
 
 ```bash
 npm run test:coverage
+```
+
+### Options
+
+You can pass options object to the singleton factory function, as a second argument.
+
+```javascript
+const singleton = require('tm-singleton');
+
+const MyCounter = singletone(MySuperCounter, options);
+const counter = new MyCounter();
+```
+
+Available options:
+
+- `errorOnDuplicate` Will throw an error if you try to create instance with new operator, available values: true/false, default is false.
+
+### API.
+
+To create a new instance, just use a new operator.
+
+e.g
+
+```javascript
+const singleton = require('tm-singleton');
+
+const MyCounter = singletone(MySuperCounter);
+const counter = new MyCounter();
+```
+
+To access an existing instance use INSTANCE getter.
+If instance hasn't been created it will return null.
+
+```javascript
+const singleton = require('tm-singleton');
+
+const MyCounter = singletone(MySuperCounter);
+
+....
+
+const counter = MyCounter.INSTANCE;
 ```
 
 ### Example
