@@ -1,5 +1,5 @@
 /**
- * Implements Singleton design pattern with several extra control methods.
+ * Implements a Singleton design pattern with several extra control methods.
  * @param {Class|Function} Cls Class or constructor function.
  * @param {Object} opts Options.
  * @param {boolean} opts.errorOnDuplicate Will throw an error if true and instance allready exists.
@@ -9,34 +9,16 @@ module.exports = (Cls, opts = {}) => {
   let INSTANCE = null;
   let INSTANCES_COUNT = 0;
 
-  return {
-    get INSTANCE() {
-      return INSTANCE;
-    },
+  return class Singleton {
 
     /**
-     * Block creating an instance.
-     */
-    block() {
-      INSTANCES_COUNT = -1;
-    },
-
-    /**
-     * Check if instance could be created.
-     * @returns {boolean} True if if instance could be created.
-     */
-    canCreate() {
-      return INSTANCES_COUNT === 0;
-    },
-
-    /**
-     * Creates an instance of singleton class or returns existed instance.
-     * @param  {...any} args
+     * Creates a new instance or returns an existed instance of the given class.
+     * @param  {...any} args Argumets to pass to the instance's constructor.
      * @returns {Object} Instance of the singleton class.
      */
-    create(...args) {
+    constructor(...args) {
       if (INSTANCES_COUNT === -1) {
-        throw new Error(`Creating new instances of ${Cls.name} blocked!`);
+        throw new Error(`Creating new instances of ${Cls.name} was blocked!`);
       }
       if (INSTANCE === null) {
         INSTANCE = new Cls(...args);
@@ -45,6 +27,19 @@ module.exports = (Cls, opts = {}) => {
         throw new Error(`${Cls.name} instance already exists!`);
       }
       return INSTANCE;
-    },
+    }
+
+    static get INSTANCE() { return INSTANCE; }
+
+    /**
+     * Blocks creating an instance.
+     */
+    static block() { INSTANCES_COUNT = -1; }
+
+    /**
+     * Checks if instance could be created.
+     * @returns {boolean} True if an instance could be created.
+     */
+    static canCreate() { return INSTANCES_COUNT === 0; }
   };
 };
