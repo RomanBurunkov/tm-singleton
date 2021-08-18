@@ -1,9 +1,9 @@
 const { isFunc, isObj, isEmpty } = require('tm-is');
 const singleton = require('../index');
 
-const requiredMethods = [ 'block', 'canCreate' ];
+const requiredMethods = ['block', 'canCreate'];
 
-class testClass {
+class TestClass {
   constructor(a, b) {
     this.a = a;
     this.b = b;
@@ -25,74 +25,71 @@ describe('Test singleton module', () => {
 });
 
 describe('Test singleton emplementation', () => {
-
   describe('Check required methods defined', () => {
-    const testSingleton = singleton(testClass);
-    
+    const TestSingleton = singleton(TestClass);
+
     requiredMethods.forEach((method) => {
       test(`Singleton should have '${method}' method.`, () => {
-        expect(isFunc(testSingleton[method])).toBe(true);
+        expect(isFunc(TestSingleton[method])).toBe(true);
       });
     });
   });
 
   describe('Test .INSTANCE getter', () => {
-    const testSingleton = singleton(testClass);
-    
-    test('testSingleton.INSTANCE should return null before creating an instance', () => {     
-      expect(testSingleton.INSTANCE === null).toBe(true);
+    const TestSingleton = singleton(TestClass);
+
+    test('TestSingleton.INSTANCE should return null before creating an instance', () => {
+      expect(TestSingleton.INSTANCE === null).toBe(true);
     });
 
-    test('testSingleton.INSTANCE should return an instance of object after creating.', () => {
-      const testInstance = new testSingleton();
-      expect(testSingleton.INSTANCE === testInstance).toBe(true);
+    test('TestSingleton.INSTANCE should return an instance of object after creating.', () => {
+      const testInstance = new TestSingleton();
+      expect(TestSingleton.INSTANCE === testInstance).toBe(true);
     });
   });
 
   describe('Testing control methods.', () => {
     test('"canCreate" method returns "true" before creating an instance', () => {
-      const testSingleton = singleton(testClass);
-      expect(testSingleton.canCreate()).toBe(true);
+      const TestSingleton = singleton(TestClass);
+      expect(TestSingleton.canCreate()).toBe(true);
     });
 
     test('"canCreate" method returns "false" after creating an instance', () => {
-      const testSingleton = singleton(testClass);
-      new testSingleton();
-      expect(testSingleton.canCreate()).toBe(false);
+      const TestSingleton = singleton(TestClass);
+      new TestSingleton(); // eslint-disable-line no-new
+      expect(TestSingleton.canCreate()).toBe(false);
     });
 
     test('"canCreate" method returns "false" after calling "block" method', () => {
-      const testSingleton = singleton(testClass);
-      testSingleton.block();
-      expect(testSingleton.canCreate()).toBe(false);
+      const TestSingleton = singleton(TestClass);
+      TestSingleton.block();
+      expect(TestSingleton.canCreate()).toBe(false);
     });
   });
 
   describe('Testing creating an instance with a "new" keyword.', () => {
     test('It creates a new instance of the given singleton class if called first time', () => {
-      const testSingleton = singleton(testClass);
-      const testInstance = new testSingleton();
-      expect(isObj(testInstance) && testInstance instanceof testClass).toBe(true);
+      const TestSingleton = singleton(TestClass);
+      const testInstance = new TestSingleton();
+      expect(isObj(testInstance) && testInstance instanceof TestClass).toBe(true);
     });
 
     test('It returns the same instance if called several times', () => {
-      const testSingleton = singleton(testClass);
-      const testInstance = new testSingleton();
-      expect(Array.from(Array(10).keys()).every(() => {
-        return new testSingleton() === testInstance;
-      })).toBe(true);
+      const TestSingleton = singleton(TestClass);
+      const inst = new TestSingleton();
+      expect(Array.from(Array(10).keys()).every(() => new TestSingleton() === inst)).toBe(true);
     });
 
     test('It throws an error if called more then once and option "errorOnDuplicate": true', () => {
-      const testSingleton = singleton(testClass, { errorOnDuplicate: true });
-      new testSingleton();
-      expect(() => new testSingleton()).toThrow(/exists/i);
+      const TestSingleton = singleton(TestClass, { errorOnDuplicate: true });
+      new TestSingleton(); // eslint-disable-line no-new
+      expect(() => new TestSingleton()).toThrow(/exists/i);
     });
 
     test('It throws an error if creating an instance has been blocked with "block" method', () => {
-      const testSingleton = singleton(testClass);
-      testSingleton.block();
-      expect(() => new testSingleton()).toThrow(/blocked/i);
+      const TestSingleton = singleton(TestClass);
+      TestSingleton.block();
+      expect(() => new TestSingleton()).toThrow(/blocked/i);
     });
   });
 });

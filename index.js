@@ -10,7 +10,6 @@ module.exports = (Cls, opts = {}) => {
   let INSTANCES_COUNT = 0;
 
   return class Singleton {
-
     /**
      * Creates a new instance or returns an existed instance of the given class.
      * @param  {...any} args Argumets to pass to the instance's constructor.
