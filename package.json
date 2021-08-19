@@ -1,6 +1,6 @@
 {
   "name": "tm-singleton",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Implementation of singleton pattern for node.",
   "main": "index.js",
   "scripts": {
