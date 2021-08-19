@@ -48,7 +48,7 @@ describe('Test singleton emplementation', () => {
     });
   });
 
-  describe('Testing control methods.', () => {
+  describe('Testing control methods and events.', () => {
     test('"canCreate" method returns "true" before creating an instance', () => {
       const TestSingleton = singleton(TestClass);
       expect(TestSingleton.canCreate()).toBe(true);
@@ -64,6 +64,11 @@ describe('Test singleton emplementation', () => {
       const TestSingleton = singleton(TestClass);
       TestSingleton.block();
       expect(TestSingleton.canCreate()).toBe(false);
+    });
+    test('It emits "create" event, after creating an instance', (done) => {
+      const TestSingleton = singleton(TestClass);
+      TestSingleton.eventEmitter.on('create', () => done());
+      new TestSingleton(); // eslint-disable-line no-new
     });
   });
 

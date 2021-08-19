@@ -64,6 +64,25 @@ const MyCounter = singletone(MySuperCounter);
 const counter = MyCounter.INSTANCE;
 ```
 
+### Events
+
+Singleton provides an event emitter.
+You can access it due eventEmitter getter.
+
+```javascript
+const singleton = require('tm-singleton');
+
+const MyCounter = singletone(MySuperCounter);
+
+....
+
+MyCounter.eventEmitter.on('create', () => doSomething());
+```
+
+Available events
+
+* `create` emits once after creating an instance.
+
 ### Example
 
 Create a module with a class which you want to make a singleton by wrapping it into a tm-singleton object:

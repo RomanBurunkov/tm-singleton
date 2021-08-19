@@ -1,3 +1,5 @@
+const EventEmitter = require('events');
+
 /**
  * Implements a Singleton design pattern with several extra control methods.
  * @param {Class|Function} Cls Class or constructor function.
@@ -8,6 +10,8 @@
 module.exports = (Cls, opts = {}) => {
   let INSTANCE = null;
   let INSTANCES_COUNT = 0;
+
+  const eventEmitter = new EventEmitter();
 
   return class Singleton {
     /**
@@ -22,6 +26,7 @@ module.exports = (Cls, opts = {}) => {
       if (INSTANCE === null) {
         INSTANCE = new Cls(...args);
         INSTANCES_COUNT = 1;
+        process.nextTick(() => eventEmitter.emit('create'));
       } else if (opts.errorOnDuplicate === true) {
         throw new Error(`${Cls.name} instance already exists!`);
       }
@@ -29,6 +34,8 @@ module.exports = (Cls, opts = {}) => {
     }
 
     static get INSTANCE() { return INSTANCE; }
+
+    static get eventEmitter() { return eventEmitter; }
 
     /**
      * Blocks creating an instance.
