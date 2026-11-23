@@ -3,6 +3,7 @@
   * Add TypeScript type declarations generated from JSDoc.
   * Update development dependencies.
   * Move ESLint and Jest configurations to separate files.
+  * Update CI testing to Node.js 18, 20, 22, 24 and 26.
 
 # 0.1.0 (2021-08-19)
 
