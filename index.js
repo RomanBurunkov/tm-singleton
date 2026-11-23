@@ -1,15 +1,58 @@
-const EventEmitter = require('events');
+const process = require('node:process');
+const EventEmitter = require('node:events');
 
 /**
- * Implements a Singleton design pattern with several extra control methods.
- * @param {Class|Function} Cls Class or constructor function.
- * @param {Object} opts Options.
- * @param {boolean} opts.errorOnDuplicate Will throw an error if true and instance allready exists.
- * @returns {Object} A singleton object for the given class.
+ * @typedef {Object} SingletonOptions
+ * @property {boolean} [errorOnDuplicate] Will throw on duplicate if true(def false).
  */
-module.exports = (Cls, opts = {}) => {
-  let INSTANCE = null;
-  let INSTANCES_COUNT = 0;
+
+/**
+ * @template {unknown[]} Args
+ * @template T
+ * @typedef {(new (...args: Args) => T) & {
+ *   readonly INSTANCE: T | null,
+ *   readonly eventEmitter: EventEmitter,
+ *   block: () => void,
+ *   canCreate: () => boolean
+ * }} SingletonConstructor
+ */
+
+/**
+ * @template T
+ * @typedef {Object} SingletonContext
+ * @property {T | null} instance The singleton instance.
+ * @property {number} instancesCount Number of instances created.
+ */
+
+/** @type {SingletonOptions} */
+const DEFAULT_OPTS = {
+  errorOnDuplicate: false,
+};
+
+/**
+ * Wraps a constructor in a singleton.
+ * @template {unknown[]} Args
+ * @template T
+ * @param {new (...args: Args) => T} Cls Constructor to wrap.
+ * @param {SingletonOptions} [options] Singleton options.
+ * @returns {SingletonConstructor<Args, T>} Singleton constructor.
+ */
+module.exports = (Cls, options) => {
+  if (!Cls || typeof Cls !== 'function') {
+    throw new Error('Class is required');
+  }
+
+  /** Singleton options @type {SingletonOptions} */
+  const opts = { ...DEFAULT_OPTS };
+  if (options && typeof options.errorOnDuplicate === 'boolean') {
+    opts.errorOnDuplicate = options.errorOnDuplicate;
+  }
+
+  /** Singleton context for current instance @type {SingletonContext<T>} */
+  const context = {
+    instance: null,
+    instancesCount: 0,
+  };
 
   const eventEmitter = new EventEmitter();
 
@@ -20,32 +63,47 @@ module.exports = (Cls, opts = {}) => {
      * @returns {Object} Instance of the singleton class.
      */
     constructor(...args) {
-      if (INSTANCES_COUNT === -1) {
+      if (context.instancesCount === -1) {
         throw new Error(`Creating new instances of ${Cls.name} was blocked!`);
       }
-      if (INSTANCE === null) {
-        INSTANCE = new Cls(...args);
-        INSTANCES_COUNT = 1;
-        process.nextTick(() => eventEmitter.emit('create'));
-      } else if (opts.errorOnDuplicate === true) {
+
+      if (opts.errorOnDuplicate && context.instance) {
         throw new Error(`${Cls.name} instance already exists!`);
       }
-      return INSTANCE;
+
+      if (context.instance === null) {
+        context.instance = new Cls(...args);
+        context.instancesCount = 1;
+        process.nextTick(() => eventEmitter.emit('create'));
+      }
+
+      // Explicitly return the instance to enforce singleton
+      return context.instance; // eslint-disable-line no-constructor-return
     }
 
-    static get INSTANCE() { return INSTANCE; }
+    /**
+     * Gets the singleton instance.
+     * @returns {Object} The instance.
+     */
+    static get INSTANCE() { return context.instance; }
 
+    /**
+     * Event emitter for singleton events.
+     * @returns {EventEmitter} The event emitter.
+     */
     static get eventEmitter() { return eventEmitter; }
 
     /**
      * Blocks creating an instance.
+     * After this, new instances can't be created.
+     * @returns {void}
      */
-    static block() { INSTANCES_COUNT = -1; }
+    static block() { context.instancesCount = -1; }
 
     /**
      * Checks if instance could be created.
      * @returns {boolean} True if an instance could be created.
      */
-    static canCreate() { return INSTANCES_COUNT === 0; }
+    static canCreate() { return context.instancesCount === 0; }
   };
 };
