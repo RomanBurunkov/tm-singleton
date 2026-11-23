@@ -22,6 +22,17 @@ describe('Test singleton module', () => {
   test('Singleton should be a function', () => {
     expect(isFunc(singleton)).toBe(true);
   });
+
+  test('It throws when no class is provided', () => {
+    expect(() => singleton()).toThrow('Class is required');
+  });
+
+  test.each([null, false, 0, 'not a class', {}])(
+    'It throws when the class is not a function: %p',
+    (value) => {
+      expect(() => singleton(value)).toThrow('Class is required');
+    },
+  );
 });
 
 describe('Test singleton emplementation', () => {
